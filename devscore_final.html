@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DevScore — AI-Powered Developer Profile Review on GenLayer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root{
+  --ink:#0a0e14;--ink2:#1c2330;--ink3:#374151;
+  --mid:#6b7280;--pale:#9ca3af;--rule:#e5e7eb;--rule2:#f3f4f6;
+  --bg:#ffffff;--bg2:#f9fafb;--bg3:#f3f4f6;
+  --green:#0d5c3a;--green2:#166534;--green-light:#dcfce7;--green-pale:#f0fdf4;
+  --blue:#1d4ed8;--blue-light:#dbeafe;
+  --red:#dc2626;--red-light:#fee2e2;
+  --amber:#b45309;--amber-light:#fef3c7;
+  --purple:#7c3aed;--purple-light:#ede9fe;
+  --mono:'DM Mono',monospace;
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'DM Sans',-apple-system,sans-serif;
+  --r:10px;--r2:16px;--r3:24px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--rule);
+  padding:0 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-mark{
+  width:32px;height:32px;background:var(--ink);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:14px;font-weight:500;color:#fff;letter-spacing:-1px;
+}
+.nav-logo-name{font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-0.3px;}
+.nav-logo-name em{color:var(--green);font-style:normal;}
+.nav-links{display:flex;align-items:center;gap:32px;}
+.nav-links a{font-size:14px;font-weight:500;color:var(--ink3);text-decoration:none;transition:.15s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.btn-ghost{
+  font-size:14px;font-weight:500;color:var(--ink3);background:none;border:none;cursor:pointer;
+  padding:8px 16px;border-radius:var(--r);transition:.15s;
+}
+.btn-ghost:hover{background:var(--bg3);}
+.btn-cta{
+  font-size:14px;font-weight:600;color:#fff;background:var(--ink);
+  border:none;border-radius:var(--r);padding:9px 20px;cursor:pointer;transition:.15s;
+}
+.btn-cta:hover{background:var(--ink2);}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+.hero{
+  max-width:1100px;margin:0 auto;
+  padding:96px 40px 80px;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--green-pale);border:1px solid #bbf7d0;
+  color:var(--green2);font-size:12px;font-weight:600;
+  padding:5px 12px;border-radius:20px;margin-bottom:24px;
+  letter-spacing:0.3px;
+}
+.hero-eyebrow::before{content:'●';font-size:8px;}
+.hero-h1{
+  font-family:var(--serif);
+  font-size:52px;line-height:1.1;letter-spacing:-0.5px;
+  color:var(--ink);margin-bottom:20px;
+}
+.hero-h1 em{font-style:italic;color:var(--green);}
+.hero-lead{font-size:17px;line-height:1.7;color:var(--ink3);margin-bottom:36px;font-weight:300;}
+.hero-actions{display:flex;align-items:center;gap:14px;margin-bottom:40px;}
+.btn-primary{
+  font-size:15px;font-weight:600;color:#fff;background:var(--ink);
+  border:none;border-radius:var(--r);padding:13px 28px;cursor:pointer;
+  transition:.2s;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary:hover{background:var(--green);transform:translateY(-1px);}
+.btn-secondary{
+  font-size:15px;font-weight:500;color:var(--ink);background:none;
+  border:1.5px solid var(--rule);border-radius:var(--r);padding:12px 24px;cursor:pointer;
+  transition:.2s;
+}
+.btn-secondary:hover{border-color:var(--ink3);}
+.hero-stats{display:flex;gap:32px;}
+.hero-stat-num{font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-0.5px;}
+.hero-stat-label{font-size:12px;color:var(--pale);margin-top:1px;}
+
+/* hero right — mock product UI */
+.hero-visual{
+  background:var(--bg2);
+  border:1px solid var(--rule);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 24px 64px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);
+}
+.visual-topbar{
+  background:var(--bg);border-bottom:1px solid var(--rule);
+  padding:12px 16px;display:flex;align-items:center;gap:8px;
+}
+.tb-dot{width:10px;height:10px;border-radius:50%;}
+.tb-dot:nth-child(1){background:#ff5f57;}
+.tb-dot:nth-child(2){background:#ffbd2e;}
+.tb-dot:nth-child(3){background:#28c840;}
+.tb-url{
+  flex:1;background:var(--bg3);border-radius:6px;
+  font-family:var(--mono);font-size:11px;color:var(--pale);
+  padding:5px 12px;margin:0 12px;
+}
+.visual-body{padding:24px;}
+.vis-score-row{display:flex;align-items:center;gap:16px;margin-bottom:20px;}
+.vis-ring{width:64px;height:64px;position:relative;flex-shrink:0;}
+.vis-ring svg{width:64px;height:64px;transform:rotate(-90deg);}
+.vis-ring .vr-num{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:600;color:var(--ink);font-family:var(--mono);
+}
+.vis-info-name{font-size:15px;font-weight:600;color:var(--ink);}
+.vis-level{
+  display:inline-block;font-size:11px;font-weight:600;
+  background:var(--green-light);color:var(--green2);
+  padding:2px 10px;border-radius:10px;margin-top:4px;
+}
+.vis-bars{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.vis-bar-row{display:flex;align-items:center;gap:10px;}
+.vis-bar-label{font-size:11px;color:var(--mid);width:110px;flex-shrink:0;}
+.vis-bar-track{flex:1;height:5px;background:var(--rule);border-radius:3px;overflow:hidden;}
+.vis-bar-fill{height:100%;border-radius:3px;background:var(--ink);}
+.vis-bar-val{font-family:var(--mono);font-size:11px;color:var(--ink);width:28px;text-align:right;}
+.vis-tag-row{display:flex;gap:6px;flex-wrap:wrap;}
+.vis-tag{
+  font-size:11px;background:var(--bg3);border:1px solid var(--rule);
+  color:var(--ink3);padding:4px 10px;border-radius:6px;
+}
+
+/* ═══════════════════════════════════════
+   TRUST STRIP
+═══════════════════════════════════════ */
+.trust{
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  padding:28px 40px;
+  display:flex;align-items:center;justify-content:center;gap:0;
+}
+.trust-label{font-size:12px;color:var(--pale);margin-right:40px;white-space:nowrap;letter-spacing:0.5px;text-transform:uppercase;font-weight:500;}
+.trust-logos{display:flex;align-items:center;gap:48px;flex-wrap:wrap;justify-content:center;}
+.trust-logo{font-size:14px;font-weight:600;color:var(--pale);letter-spacing:-0.3px;font-family:var(--sans);}
+
+/* ═══════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════ */
+.section{max-width:1100px;margin:0 auto;padding:96px 40px;}
+.section-eyebrow{
+  font-size:12px;font-weight:600;color:var(--green2);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;
+}
+.section-h2{
+  font-family:var(--serif);font-size:42px;line-height:1.15;
+  letter-spacing:-0.3px;color:var(--ink);margin-bottom:16px;
+}
+.section-h2 em{font-style:italic;color:var(--green);}
+.section-lead{font-size:17px;line-height:1.7;color:var(--ink3);font-weight:300;max-width:560px;}
+
+/* ─ HOW IT WORKS ─ */
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:64px;}
+.step-card{position:relative;}
+.step-number{
+  font-family:var(--mono);font-size:12px;font-weight:500;color:var(--pale);
+  border:1px solid var(--rule);border-radius:20px;
+  display:inline-block;padding:4px 12px;margin-bottom:16px;
+}
+.step-icon{font-size:28px;margin-bottom:14px;display:block;}
+.step-title{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:8px;}
+.step-desc{font-size:14px;line-height:1.65;color:var(--mid);}
+.step-connector{
+  position:absolute;top:22px;left:calc(100% + 2px);
+  width:28px;height:1px;background:var(--rule);
+}
+.step-connector::after{
+  content:'›';position:absolute;right:-4px;top:-10px;color:var(--pale);font-size:14px;
+}
+
+/* ─ CRITERIA ─ */
+.criteria-wrap{margin-top:64px;display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);border-radius:20px;overflow:hidden;}
+.criterion{
+  padding:32px 36px;border-bottom:1px solid var(--rule);
+  display:flex;gap:20px;align-items:flex-start;
+  transition:.15s;cursor:default;
+}
+.criterion:hover{background:var(--bg2);}
+.criterion:nth-child(odd):not(:last-child){border-right:1px solid var(--rule);}
+.criterion:nth-last-child(-n+2){border-bottom:none;}
+.criterion-icon{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.criterion-icon.g{background:var(--green-pale);}
+.criterion-icon.b{background:var(--blue-light);}
+.criterion-icon.a{background:var(--amber-light);}
+.criterion-icon.p{background:var(--purple-light);}
+.criterion-icon.r{background:var(--red-light);}
+.criterion-icon.k{background:var(--bg3);}
+.criterion-body{}
+.criterion-title{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:5px;}
+.criterion-desc{font-size:13px;line-height:1.6;color:var(--mid);}
+.criterion-weight{
+  font-family:var(--mono);font-size:10px;color:var(--pale);
+  margin-top:8px;
+}
+
+/* ─ CONSENSUS SECTION ─ */
+.consensus-wrap{
+  margin-top:64px;
+  background:var(--ink);border-radius:24px;
+  padding:64px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
+}
+.cons-h{
+  font-family:var(--serif);font-size:36px;line-height:1.2;color:#fff;
+  margin-bottom:16px;letter-spacing:-0.3px;
+}
+.cons-h em{font-style:italic;color:#86efac;}
+.cons-lead{font-size:15px;line-height:1.7;color:rgba(255,255,255,0.55);font-weight:300;}
+.cons-validators{display:flex;flex-direction:column;gap:12px;}
+.validator-row{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;padding:14px 18px;
+}
+.v-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;animation:vpulse 2s infinite;}
+.v-dot:nth-child(1){animation-delay:0s;}
+@keyframes vpulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.v-model{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.7);flex:1;}
+.v-verdict{font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:6px;}
+.v-verdict.t{background:rgba(74,222,128,.15);color:#4ade80;}
+.v-verdict.f{background:rgba(248,113,113,.15);color:#f87171;}
+.v-consensus{
+  margin-top:16px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.v-cons-label{font-size:12px;color:rgba(255,255,255,0.4);font-family:var(--mono);}
+.v-cons-val{font-family:var(--mono);font-size:13px;color:#4ade80;font-weight:500;}
+
+/* ═══════════════════════════════════════
+   APP SECTION
+═══════════════════════════════════════ */
+.app-section{background:var(--bg2);border-top:1px solid var(--rule);padding:96px 40px;}
+.app-inner{max-width:860px;margin:0 auto;}
+.app-header{text-align:center;margin-bottom:56px;}
+
+.wallet-strip{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg);border:1px solid var(--rule);border-radius:var(--r2);
+  padding:14px 20px;margin-bottom:32px;
+}
+.ws-left{display:flex;align-items:center;gap:10px;}
+.ws-dot{width:8px;height:8px;border-radius:50%;background:var(--rule);}
+.ws-dot.on{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2);}
+.ws-addr{font-family:var(--mono);font-size:13px;color:var(--pale);}
+.ws-addr.on{color:var(--ink);}
+.btn-wallet{
+  font-size:13px;font-weight:600;color:var(--ink);background:var(--bg3);
+  border:1px solid var(--rule);border-radius:var(--r);padding:8px 18px;cursor:pointer;transition:.15s;
+}
+.btn-wallet:hover{border-color:var(--ink3);}
+.btn-wallet:disabled{opacity:.5;cursor:default;}
+
+.app-form{background:var(--bg);border:1px solid var(--rule);border-radius:20px;padding:40px;margin-bottom:32px;}
+.form-group{margin-bottom:20px;}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;}
+.form-group label span{font-weight:400;color:var(--pale);margin-left:6px;font-size:12px;}
+.form-group input{
+  width:100%;background:var(--bg2);border:1.5px solid var(--rule);border-radius:var(--r);
+  color:var(--ink);font-family:var(--sans);font-size:14px;padding:12px 16px;outline:none;transition:.2s;
+}
+.form-group input::placeholder{color:var(--pale);}
+.form-group input:focus{border-color:var(--ink);background:var(--bg);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.btn-run{
+  width:100%;background:var(--ink);color:#fff;border:none;
+  border-radius:var(--r2);font-family:var(--sans);font-weight:600;font-size:15px;
+  padding:16px;cursor:pointer;transition:.2s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:8px;
+}
+.btn-run:hover{background:var(--green);}
+.btn-run:disabled{opacity:.45;cursor:not-allowed;}
+
+/* alert */
+.alert{padding:12px 16px;border-radius:var(--r);font-size:13px;margin-bottom:20px;display:none;}
+.alert.show{display:block;}
+.alert.err{background:var(--red-light);color:var(--red);border:1px solid #fca5a5;}
+.alert.ok{background:var(--green-pale);color:var(--green2);border:1px solid #86efac;}
+
+/* processing */
+.proc{display:none;background:var(--bg);border:1px solid var(--rule);border-radius:20px;padding:48px;margin-bottom:32px;text-align:center;}
+.proc.on{display:block;}
+.proc-spin{
+  width:40px;height:40px;border:2px solid var(--rule);border-top-color:var(--ink);
+  border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 28px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.proc-title{font-size:16px;font-weight:600;margin-bottom:4px;}
+.proc-sub{font-size:13px;color:var(--mid);margin-bottom:28px;}
+.proc-steps{list-style:none;text-align:left;max-width:380px;margin:0 auto;display:flex;flex-direction:column;gap:8px;}
+.proc-steps li{
+  font-family:var(--mono);font-size:12px;color:var(--pale);
+  display:flex;align-items:center;gap:10px;padding:8px 14px;
+  border-radius:8px;transition:all .3s;
+}
+.proc-steps li.act{background:var(--bg2);color:var(--ink);border:1px solid var(--rule);}
+.proc-steps li.done{color:var(--green2);}
+.ps-icon{min-width:16px;}
+
+/* ═══════════════════════════════════════
+   RESULT
+═══════════════════════════════════════ */
+.result-card{background:var(--bg);border:1px solid var(--rule);border-radius:20px;overflow:hidden;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.rc-header{
+  padding:32px 36px;border-bottom:1px solid var(--rule);
+  display:flex;align-items:flex-start;gap:28px;
+}
+.rc-ring-wrap{position:relative;flex-shrink:0;}
+.rc-ring-wrap svg{width:100px;height:100px;transform:rotate(-90deg);}
+.rc-num{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.rc-num-main{font-family:var(--mono);font-size:28px;font-weight:500;color:var(--ink);line-height:1;}
+.rc-num-sub{font-size:10px;color:var(--pale);font-family:var(--mono);margin-top:2px;}
+.rc-info{flex:1;}
+.rc-name{font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-0.3px;margin-bottom:6px;}
+.rc-badges{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.level-pill{
+  font-size:12px;font-weight:600;padding:4px 14px;border-radius:20px;
+}
+.level-pill.Junior{background:var(--amber-light);color:var(--amber);}
+.level-pill.Mid{background:var(--blue-light);color:var(--blue);}
+.level-pill.Senior{background:var(--green-light);color:var(--green2);}
+.level-pill.Lead{background:var(--purple-light);color:var(--purple);}
+.pos-pill{
+  font-family:var(--mono);font-size:11px;color:var(--mid);
+  background:var(--bg3);border:1px solid var(--rule);
+  padding:4px 12px;border-radius:20px;
+}
+.rc-summary{font-size:14px;line-height:1.7;color:var(--ink3);}
+
+.rc-body{padding:36px;display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+.rc-col-title{font-size:11px;font-weight:600;color:var(--pale);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;}
+
+/* score bars */
+.score-bar{margin-bottom:12px;}
+.score-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.score-bar-label{font-size:13px;color:var(--ink3);}
+.score-bar-val{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--ink);}
+.score-track{height:6px;background:var(--rule);border-radius:3px;overflow:hidden;}
+.score-fill{height:100%;border-radius:3px;background:var(--ink);transition:width 1s cubic-bezier(.4,0,.2,1);}
+
+/* radar */
+.radar-container{display:flex;justify-content:center;align-items:center;}
+
+/* insights */
+.rc-footer{padding:0 36px 36px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.insight-box{background:var(--bg2);border:1px solid var(--rule);border-radius:var(--r2);padding:20px 22px;}
+.insight-label{
+  font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  margin-bottom:10px;display:flex;align-items:center;gap:6px;
+}
+.insight-label.pos{color:var(--green2);}
+.insight-label.neg{color:var(--amber);}
+.insight-text{font-size:13px;line-height:1.7;color:var(--ink3);}
+
+/* meta */
+.rc-meta{padding:20px 36px 36px;border-top:1px solid var(--rule);display:grid;grid-template-columns:repeat(3,1fr);gap:0;}
+.meta-cell{padding:12px 0;}
+.meta-cell:not(:last-child){border-right:1px solid var(--rule);padding-right:20px;margin-right:20px;}
+.mc-key{font-size:11px;color:var(--pale);font-family:var(--mono);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.mc-val{font-size:13px;color:var(--ink);font-family:var(--mono);}
+
+/* history */
+.hist-section{background:var(--bg);border:1px solid var(--rule);border-radius:20px;margin-top:20px;overflow:hidden;}
+.hist-header{padding:16px 24px;border-bottom:1px solid var(--rule);display:flex;align-items:center;justify-content:space-between;}
+.hist-title{font-size:13px;font-weight:600;color:var(--ink);}
+.hist-badge{font-family:var(--mono);font-size:11px;background:var(--bg3);border:1px solid var(--rule);color:var(--mid);padding:3px 10px;border-radius:20px;}
+.hist-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 24px;border-bottom:1px solid var(--rule2);
+  cursor:pointer;transition:.15s;
+}
+.hist-row:last-child{border-bottom:none;}
+.hist-row:hover{background:var(--bg2);}
+.hist-score{font-family:var(--mono);font-size:14px;font-weight:500;width:36px;}
+.hist-pos{font-size:13px;color:var(--mid);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.hist-lvl{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;}
+.hist-lvl.Junior{background:var(--amber-light);color:var(--amber);}
+.hist-lvl.Mid{background:var(--blue-light);color:var(--blue);}
+.hist-lvl.Senior{background:var(--green-light);color:var(--green2);}
+.hist-lvl.Lead{background:var(--purple-light);color:var(--purple);}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{
+  border-top:1px solid var(--rule);padding:40px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:13px;color:var(--pale);
+}
+.footer-brand{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--ink3);}
+.chain-pill{
+  display:flex;align-items:center;gap:6px;
+  background:var(--green-pale);border:1px solid #bbf7d0;
+  padding:6px 14px;border-radius:20px;color:var(--green2);font-size:12px;font-weight:500;
+}
+.chain-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:vpulse 2s infinite;}
+
+@media(max-width:800px){
+  .hero{grid-template-columns:1fr;gap:40px;padding:60px 24px 48px;}
+  .hero-visual{display:none;}
+  .steps-grid{grid-template-columns:1fr 1fr;}
+  .criteria-wrap{grid-template-columns:1fr;}
+  .criterion:nth-child(odd){border-right:none;}
+  .consensus-wrap{grid-template-columns:1fr;padding:40px 24px;}
+  .form-row{grid-template-columns:1fr;}
+  .rc-body,.rc-footer,.rc-meta{grid-template-columns:1fr;}
+  .rc-header{flex-direction:column;}
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-mark">ds</div>
+    <div class="nav-logo-name">Dev<em>Score</em></div>
+  </a>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#criteria">Criteria</a>
+    <a href="#try">Try it</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-ghost" onclick="connectWallet()">Connect Wallet</button>
+    <button class="btn-cta" onclick="document.getElementById('try').scrollIntoView({behavior:'smooth'})">Try for free →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section>
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Powered by GenLayer Testnet</div>
+      <h1 class="hero-h1">Review developer profiles with <em>on-chain AI</em> consensus</h1>
+      <p class="hero-lead">DevScore evaluates GitHub repositories and LinkedIn experience against any target role. Five independent AI validators reach verifiable consensus — results stored permanently on-chain.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('try').scrollIntoView({behavior:'smooth'})">Evaluate a profile →</button>
+        <button class="btn-secondary" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">See how it works</button>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">6</div>
+          <div class="hero-stat-label">Scoring criteria</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">5</div>
+          <div class="hero-stat-label">AI validators</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">100%</div>
+          <div class="hero-stat-label">On-chain results</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="visual-topbar">
+        <div class="tb-dot"></div><div class="tb-dot"></div><div class="tb-dot"></div>
+        <div class="tb-url">app.devscore.io/review/0x4a2f...</div>
+      </div>
+      <div class="visual-body">
+        <div class="vis-score-row">
+          <div class="vis-ring">
+            <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="#e5e7eb" stroke-width="6"/><circle cx="32" cy="32" r="26" fill="none" stroke="#0d5c3a" stroke-width="6" stroke-dasharray="163.4" stroke-dashoffset="29" stroke-linecap="round"/></svg>
+            <div class="vr-num">82</div>
+          </div>
+          <div>
+            <div class="vis-info-name">@alexdevops</div>
+            <div class="vis-level">Senior</div>
+          </div>
+        </div>
+        <div class="vis-bars">
+          <div class="vis-bar-row"><span class="vis-bar-label">Technical skills</span><div class="vis-bar-track"><div class="vis-bar-fill" style="width:88%;background:#0d5c3a"></div></div><span class="vis-bar-val">88</span></div>
+          <div class="vis-bar-row"><span class="vis-bar-label">Project quality</span><div class="vis-bar-track"><div class="vis-bar-fill" style="width:79%"></div></div><span class="vis-bar-val">79</span></div>
+          <div class="vis-bar-row"><span class="vis-bar-label">Experience</span><div class="vis-bar-track"><div class="vis-bar-fill" style="width:84%"></div></div><span class="vis-bar-val">84</span></div>
+          <div class="vis-bar-row"><span class="vis-bar-label">Communication</span><div class="vis-bar-track"><div class="vis-bar-fill" style="width:71%"></div></div><span class="vis-bar-val">71</span></div>
+          <div class="vis-bar-row"><span class="vis-bar-label">Position fit</span><div class="vis-bar-track"><div class="vis-bar-fill" style="width:86%"></div></div><span class="vis-bar-val">86</span></div>
+        </div>
+        <div class="vis-tag-row">
+          <span class="vis-tag">Solidity</span><span class="vis-tag">Rust</span><span class="vis-tag">React</span><span class="vis-tag">7 yrs exp.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust">
+  <div class="trust-label">Built on</div>
+  <div class="trust-logos">
+    <span class="trust-logo">GenLayer</span>
+    <span class="trust-logo">Optimistic Democracy</span>
+    <span class="trust-logo">GenVM</span>
+    <span class="trust-logo">Testnet Asimov</span>
+    <span class="trust-logo">ZKsync</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="section">
+    <div class="section-eyebrow">How it works</div>
+    <h2 class="section-h2">From URL to verifiable score <em>in minutes</em></h2>
+    <p class="section-lead">No manual review. No opaque scoring. Every result is produced by independent AI consensus and anchored on-chain.</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">01</div>
+        <span class="step-icon">🔗</span>
+        <div class="step-title">Submit profiles</div>
+        <p class="step-desc">Provide a GitHub URL, LinkedIn URL, and the target role. The review is scoped to what that position actually requires.</p>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">02</div>
+        <span class="step-icon">⚙️</span>
+        <div class="step-title">AI fetches live data</div>
+        <p class="step-desc">The GenLayer intelligent contract calls <code style="font-family:var(--mono);font-size:12px;background:var(--bg3);padding:1px 5px;border-radius:4px">gl.get_webpage()</code> directly — no scraper, no middleman, no stale cache.</p>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">03</div>
+        <span class="step-icon">🧠</span>
+        <div class="step-title">5 validators score independently</div>
+        <p class="step-desc">Each GenLayer validator runs a different LLM. All five evaluate the same profile and must reach consensus on the final scores.</p>
+        <div class="step-connector"></div>
+      </div>
+      <div class="step-card">
+        <div class="step-number">04</div>
+        <span class="step-icon">⛓️</span>
+        <div class="step-title">Results stored on-chain</div>
+        <p class="step-desc">The finalised score, reasoning, and recommendations are written to the contract state — permanent, verifiable, tamper-proof.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CRITERIA -->
+<section id="criteria" style="background:var(--bg2);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);">
+  <div class="section">
+    <div class="section-eyebrow">Scoring criteria</div>
+    <h2 class="section-h2">Six dimensions, <em>one honest number</em></h2>
+    <p class="section-lead">Every aspect of a developer's public profile is assessed relative to the target position — not against a generic rubric.</p>
+    <div class="criteria-wrap">
+      <div class="criterion">
+        <div class="criterion-icon g">💻</div>
+        <div class="criterion-body">
+          <div class="criterion-title">Technical Skills</div>
+          <div class="criterion-desc">Languages, frameworks, and tools evident from GitHub activity. Depth over breadth — specialisation in the right stack is rewarded.</div>
+          <div class="criterion-weight">WEIGHT: HIGH</div>
+        </div>
+      </div>
+      <div class="criterion">
+        <div class="criterion-icon b">📁</div>
+        <div class="criterion-body">
+          <div class="criterion-title">Project Quality</div>
+          <div class="criterion-desc">README completeness, commit consistency, code architecture, test coverage signals. Poor docs score low regardless of star count.</div>
+          <div class="criterion-weight">WEIGHT: HIGH</div>
+        </div>
+      </div>
+      <div class="criterion">
+        <div class="criterion-icon a">🏢</div>
+        <div class="criterion-body">
+          <div class="criterion-title">Experience</div>
+          <div class="criterion-desc">Total tenure, career progression, company calibre, and relevance of past roles to the position being evaluated.</div>
+          <div class="criterion-weight">WEIGHT: MEDIUM–HIGH</div>
+        </div>
+      </div>
+      <div class="criterion">
+        <div class="criterion-icon p">✍️</div>
+        <div class="criterion-body">
+          <div class="criterion-title">Communication</div>
+          <div class="criterion-desc">Clarity of bio and profile description, ability to explain technical work in plain language, LinkedIn summary quality.</div>
+          <div class="criterion-weight">WEIGHT: MEDIUM</div>
+        </div>
+      </div>
+      <div class="criterion">
+        <div class="criterion-icon r">🎯</div>
+        <div class="criterion-body">
+          <div class="criterion-title">Position Fit</div>
+          <div class="criterion-desc">How closely the candidate's demonstrated skills and experience map to the specific role provided. The most contextual of all criteria.</div>
+          <div class="criterion-weight">WEIGHT: HIGH</div>
+        </div>
+      </div>
+      <div class="criterion">
+        <div class="criterion-icon k">⭐</div>
+        <div class="criterion-body">
+          <div class="criterion-title">Overall Score</div>
+          <div class="criterion-desc">A weighted composite of all five criteria, normalised to 0–100. Maps to a level: Junior, Mid, Senior, or Lead.</div>
+          <div class="criterion-weight">COMPOSITE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONSENSUS -->
+<section>
+  <div class="section">
+    <div class="consensus-wrap">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;">Why it's trustworthy</div>
+        <h2 class="cons-h">Not one AI. <em>Five independent verdicts.</em></h2>
+        <p class="cons-lead">GenLayer's Optimistic Democracy mechanism routes the same evaluation to five validators, each running a different language model. Consensus is required before any score is accepted. A single biased model cannot influence the outcome.</p>
+        <div style="margin-top:24px;display:flex;gap:24px;">
+          <div><div style="font-family:var(--mono);font-size:20px;font-weight:500;color:#fff">5</div><div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">Validators</div></div>
+          <div><div style="font-family:var(--mono);font-size:20px;font-weight:500;color:#fff">≥3/5</div><div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">For consensus</div></div>
+          <div><div style="font-family:var(--mono);font-size:20px;font-weight:500;color:#fff">0</div><div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px">Single point of failure</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="cons-validators">
+          <div class="validator-row"><div class="v-dot"></div><div class="v-model">GPT-4o · Validator #1</div><div class="v-verdict t">Senior · 81</div></div>
+          <div class="validator-row"><div class="v-dot" style="animation-delay:.4s"></div><div class="v-model">Claude 3.5 · Validator #2</div><div class="v-verdict t">Senior · 84</div></div>
+          <div class="validator-row"><div class="v-dot" style="animation-delay:.8s"></div><div class="v-model">Gemini 1.5 · Validator #3</div><div class="v-verdict t">Senior · 79</div></div>
+          <div class="validator-row"><div class="v-dot" style="animation-delay:1.2s"></div><div class="v-model">Llama 3.1 · Validator #4</div><div class="v-verdict t">Senior · 83</div></div>
+          <div class="validator-row"><div class="v-dot" style="animation-delay:1.6s"></div><div class="v-model">Mistral Large · Validator #5</div><div class="v-verdict t">Senior · 80</div></div>
+        </div>
+        <div class="v-consensus">
+          <span class="v-cons-label">FINAL CONSENSUS</span>
+          <span class="v-cons-val">Senior · Overall 81/100 ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP -->
+<section id="try" class="app-section">
+  <div class="app-inner">
+    <div class="app-header">
+      <div class="section-eyebrow" style="margin-bottom:10px;">Try it now</div>
+      <h2 class="section-h2" style="font-size:36px;">Evaluate any developer profile</h2>
+      <p class="section-lead" style="margin:0 auto;text-align:center;">Free on GenLayer Testnet Asimov. Connect a wallet to get started.</p>
+    </div>
+
+    <div class="wallet-strip">
+      <div class="ws-left">
+        <div class="ws-dot" id="wsDot"></div>
+        <span class="ws-addr" id="wsAddr">No wallet connected</span>
+      </div>
+      <button class="btn-wallet" id="btnWallet" onclick="connectWallet()">Connect MetaMask</button>
+    </div>
+
+    <div class="alert" id="alertBox"></div>
+
+    <div class="app-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>GitHub URL <span>optional</span></label>
+          <input id="ghUrl" type="text" placeholder="https://github.com/username"/>
+        </div>
+        <div class="form-group">
+          <label>LinkedIn URL <span>optional</span></label>
+          <input id="liUrl" type="text" placeholder="https://linkedin.com/in/username"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Target Position</label>
+        <input id="posInput" type="text" placeholder="e.g. Senior Solidity Developer, Full Stack Web3 Engineer, Rust Systems Developer..."/>
+      </div>
+      <button class="btn-run" id="btnRun" onclick="runReview()">
+        Evaluate with AI →
+      </button>
+    </div>
+
+    <!-- PROCESSING -->
+    <div class="proc" id="procBox">
+      <div class="proc-spin"></div>
+      <div class="proc-title">Evaluating profile on-chain</div>
+      <div class="proc-sub">GenLayer validators are reaching consensus. This takes 30–90 seconds.</div>
+      <ul class="proc-steps" id="procSteps">
+        <li id="ps1"><span class="ps-icon">○</span> Submitting transaction</li>
+        <li id="ps2"><span class="ps-icon">○</span> Fetching GitHub profile</li>
+        <li id="ps3"><span class="ps-icon">○</span> Fetching GitHub repositories</li>
+        <li id="ps4"><span class="ps-icon">○</span> Fetching LinkedIn profile</li>
+        <li id="ps5"><span class="ps-icon">○</span> Running AI evaluation</li>
+        <li id="ps6"><span class="ps-icon">○</span> Reaching validator consensus</li>
+        <li id="ps7"><span class="ps-icon">○</span> Writing result on-chain</li>
+      </ul>
+    </div>
+
+    <!-- RESULT -->
+    <div id="resultArea"></div>
+
+    <!-- HISTORY -->
+    <div id="histArea"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="nav-logo-mark" style="width:28px;height:28px;font-size:12px;">ds</div>
+    DevScore — AI CV Reviewer
+  </div>
+  <div style="color:var(--pale);">All evaluations are stored permanently on GenLayer Testnet Asimov</div>
+  <div class="chain-pill"><div class="chain-dot"></div>GenLayer Testnet Asimov</div>
+</footer>
+
+<!-- ══════════════════════════════════════════ -->
+<script>
+const CFG = {
+  CONTRACT_ADDRESS: "0x2193c8649b84C95d7524d43becF7cEb03249936F",
+  CHAIN_ID: "0xF27F",
+  RPC_URL: "https://rpc.genlayer.com/testnet-asimov",
+  CHAIN_NAME: "GenLayer Testnet Asimov",
+};
+
+let wallet = null;
+
+async function connectWallet() {
+  if (!window.ethereum) { alert("Please install MetaMask."); return; }
+  try {
+    const accs = await window.ethereum.request({ method: "eth_requestAccounts" });
+    wallet = accs[0];
+    const cid = await window.ethereum.request({ method: "eth_chainId" });
+    if (cid !== CFG.CHAIN_ID) {
+      try {
+        await window.ethereum.request({ method: "wallet_switchEthereumChain", params: [{ chainId: CFG.CHAIN_ID }] });
+      } catch (sw) {
+        if (sw.code === 4902) {
+          await window.ethereum.request({ method: "wallet_addEthereumChain", params: [{ chainId: CFG.CHAIN_ID, chainName: CFG.CHAIN_NAME, rpcUrls: [CFG.RPC_URL], nativeCurrency: { name: "GEN", symbol: "GEN", decimals: 18 } }] });
+        }
+      }
+    }
+    setWUI(wallet); loadHistory();
+    showAlert("Wallet connected: " + sh(wallet), "ok");
+  } catch (e) { showAlert(e.message, "err"); }
+}
+
+function setWUI(a) {
+  document.getElementById("wsDot").className = "ws-dot on";
+  const wa = document.getElementById("wsAddr"); wa.className = "ws-addr on"; wa.textContent = sh(a);
+  const b = document.getElementById("btnWallet"); b.textContent = "Connected ✓"; b.disabled = true;
+}
+
+async function runReview() {
+  const gh = document.getElementById("ghUrl").value.trim();
+  const li = document.getElementById("liUrl").value.trim();
+  const pos = document.getElementById("posInput").value.trim();
+  if (!gh && !li) { showAlert("Please enter at least one profile URL.", "err"); return; }
+  if (!pos) { showAlert("Please enter a target position.", "err"); return; }
+  if (!wallet) { showAlert("Connect your wallet first.", "err"); return; }
+  if (!CFG.CONTRACT_ADDRESS) {
+    showAlert("Contract address missing.", "err"); return;
+  }
+  hideAlert();
+  document.getElementById("btnRun").disabled = true;
+  startProc();
+  try {
+    const { createClient } = await import("https://esm.sh/genlayer-js@latest");
+    const { testnetAsimov } = await import("https://esm.sh/genlayer-js@latest/chains");
+    const { TransactionStatus } = await import("https://esm.sh/genlayer-js@latest/types");
+    const client = createClient({ chain: testnetAsimov, account: wallet });
+    await client.initializeConsensusSmartContract();
+    ps(1,"done"); ps(2,"act");
+    const hash = await client.writeContract({ address: CFG.CONTRACT_ADDRESS, functionName: "review_profile", args: [gh||"",li||"",pos], value: 0n });
+    ps(2,"done"); ps(3,"done"); ps(4,"done"); ps(5,"act");
+    await client.waitForTransactionReceipt({ hash, status: TransactionStatus.FINALIZED, retries: 60, interval: 5000 });
+    ps(5,"done"); ps(6,"act");
+    await sleep(1200); ps(6,"done"); ps(7,"act");
+    const reviews = await client.readContract({ address: CFG.CONTRACT_ADDRESS, functionName: "get_all_reviews", args: [] });
+    ps(7,"done"); await sleep(400); stopProc();
+    renderResult(reviews[reviews.length - 1]);
+    renderHistory(reviews);
+  } catch (e) { stopProc(); showAlert("Error: " + e.message, "err"); console.error(e); }
+  document.getElementById("btnRun").disabled = false;
+}
+
+function renderResult(r) {
+  const sc = r.scores; const ov = sc.overall;
+  const C = 2*Math.PI*40; const off = C*(1-ov/100);
+  const lc = {Junior:"#b45309",Mid:"#1d4ed8",Senior:"#0d5c3a",Lead:"#7c3aed"}[r.level]||"#0d5c3a";
+  const gh = r.github_url ? r.github_url.replace("https://github.com/","@") : "—";
+  const ts = r.timestamp ? new Date(r.timestamp*1000).toLocaleString("en-GB") : "—";
+  const bars = [
+    {l:"Technical skills",v:sc.technical_skills},
+    {l:"Project quality",v:sc.project_quality},
+    {l:"Experience",v:sc.experience},
+    {l:"Communication",v:sc.communication},
+    {l:"Position fit",v:sc.position_fit},
+  ];
+  const barsHTML = bars.map(b=>`<div class="score-bar">
+    <div class="score-bar-top"><span class="score-bar-label">${b.l}</span><span class="score-bar-val">${b.v}</span></div>
+    <div class="score-track"><div class="score-fill" style="width:0%" data-w="${b.v}"></div></div>
+  </div>`).join("");
+  const radarSVG = buildRadar(["Technical","Projects","Experience","Comms","Fit"],[sc.technical_skills,sc.project_quality,sc.experience,sc.communication,sc.position_fit]);
+  document.getElementById("resultArea").innerHTML = `<div class="result-card">
+    <div class="rc-header">
+      <div class="rc-ring-wrap">
+        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#e5e7eb" stroke-width="8"/><circle cx="50" cy="50" r="40" fill="none" stroke="${lc}" stroke-width="8" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" stroke-linecap="round"/></svg>
+        <div class="rc-num"><span class="rc-num-main" id="animN">0</span><span class="rc-num-sub">/ 100</span></div>
+      </div>
+      <div class="rc-info">
+        <div class="rc-name">${gh}</div>
+        <div class="rc-badges">
+          <span class="level-pill ${r.level}">${r.level}</span>
+          <span class="pos-pill">→ ${r.target_position}</span>
+        </div>
+        <div class="rc-summary">${r.summary||"—"}</div>
+      </div>
+    </div>
+    <div class="rc-body">
+      <div><div class="rc-col-title">Score breakdown</div>${barsHTML}</div>
+      <div><div class="rc-col-title">Radar analysis</div><div class="radar-container">${radarSVG}</div></div>
+    </div>
+    <div class="rc-footer">
+      <div class="insight-box"><div class="insight-label pos">✓ Strengths</div><div class="insight-text">${r.strengths||"—"}</div></div>
+      <div class="insight-box"><div class="insight-label neg">↑ Areas to improve</div><div class="insight-text">${r.improvements||"—"}</div></div>
+    </div>
+    <div class="rc-meta">
+      <div class="meta-cell"><div class="mc-key">Reviewer</div><div class="mc-val">${r.reviewer?sh(r.reviewer):"—"}</div></div>
+      <div class="meta-cell"><div class="mc-key">Timestamp</div><div class="mc-val">${ts}</div></div>
+      <div class="meta-cell"><div class="mc-key">Network</div><div class="mc-val">GenLayer Testnet</div></div>
+    </div>
+  </div>`;
+  animCount("animN",0,ov,1000);
+  setTimeout(()=>document.querySelectorAll(".score-fill").forEach(el=>el.style.width=el.dataset.w+"%"),200);
+  document.getElementById("resultArea").scrollIntoView({behavior:"smooth"});
+}
+
+function buildRadar(labels, values) {
+  const cx=100,cy=100,r=70,n=labels.length;
+  let s=`<svg width="200" height="200" viewBox="0 0 200 200">`;
+  for(let l=1;l<=5;l++){const rr=r*l/5;const pts=Array.from({length:n},(_,i)=>{const a=Math.PI*2*i/n-Math.PI/2;return`${cx+rr*Math.cos(a)},${cy+rr*Math.sin(a)}`}).join(" ");s+=`<polygon points="${pts}" fill="none" stroke="#e5e7eb" stroke-width="1"/>`;}
+  for(let i=0;i<n;i++){const a=Math.PI*2*i/n-Math.PI/2;s+=`<line x1="${cx}" y1="${cy}" x2="${cx+r*Math.cos(a)}" y2="${cy+r*Math.sin(a)}" stroke="#e5e7eb" stroke-width="1"/>`;}
+  const pts=values.map((v,i)=>{const a=Math.PI*2*i/n-Math.PI/2;const rv=r*v/100;return`${cx+rv*Math.cos(a)},${cy+rv*Math.sin(a)}`}).join(" ");
+  s+=`<polygon points="${pts}" fill="rgba(13,92,58,0.1)" stroke="#0d5c3a" stroke-width="2"/>`;
+  values.forEach((v,i)=>{const a=Math.PI*2*i/n-Math.PI/2;const rv=r*v/100;s+=`<circle cx="${cx+rv*Math.cos(a)}" cy="${cy+rv*Math.sin(a)}" r="4" fill="#0d5c3a"/>`;const lx=cx+(r+18)*Math.cos(a),ly=cy+(r+18)*Math.sin(a);const anc=Math.cos(a)>0.1?"start":Math.cos(a)<-0.1?"end":"middle";s+=`<text x="${lx}" y="${ly+4}" text-anchor="${anc}" font-family="DM Sans,sans-serif" font-size="10" fill="#9ca3af">${labels[i]}</text>`;});
+  s+=`</svg>`;return s;
+}
+
+async function loadHistory() {
+  if(!CFG.CONTRACT_ADDRESS)return;
+  try{
+    const{createClient}=await import("https://esm.sh/genlayer-js@latest");
+    const{testnetAsimov}=await import("https://esm.sh/genlayer-js@latest/chains");
+    const client=createClient({chain:testnetAsimov,account:wallet});
+    const reviews=await client.readContract({address:CFG.CONTRACT_ADDRESS,functionName:"get_all_reviews",args:[]});
+    if(reviews&&reviews.length>0)renderHistory(reviews);
+  }catch(e){console.log(e.message);}
+}
+
+function renderHistory(reviews) {
+  const area=document.getElementById("histArea");
+  if(!reviews||!reviews.length){area.innerHTML="";return;}
+  const rows=[...reviews].reverse().map(r=>`<div class="hist-row" onclick="renderResult(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+    <span class="hist-score" style="color:${scoreC(r.scores.overall)}">${r.scores.overall}</span>
+    <span class="hist-pos">${r.github_url?r.github_url.replace("https://github.com/","@"):"—"} → ${r.target_position}</span>
+    <span class="hist-lvl ${r.level}">${r.level}</span>
+  </div>`).join("");
+  area.innerHTML=`<div class="hist-section"><div class="hist-header"><span class="hist-title">Previous evaluations</span><span class="hist-badge">${reviews.length} on-chain</span></div>${rows}</div>`;
+}
+
+function scoreC(s){return s>=86?"#7c3aed":s>=66?"#0d5c3a":s>=41?"#1d4ed8":"#b45309";}
+
+let procInt=null;
+function startProc(){document.getElementById("procBox").classList.add("on");ps(1,"act");}
+function stopProc(){document.getElementById("procBox").classList.remove("on");for(let i=1;i<=7;i++){const el=document.getElementById("ps"+i);if(el){el.className="";el.querySelector(".ps-icon").textContent="○";}}}
+function ps(n,st){const el=document.getElementById("ps"+n);if(!el)return;el.className=st;el.querySelector(".ps-icon").textContent=st==="done"?"✓":st==="act"?"→":"○";}
+function showAlert(m,t){const a=document.getElementById("alertBox");a.textContent=m;a.className="alert "+t+" show";}
+function hideAlert(){document.getElementById("alertBox").className="alert";}
+function sh(a){return a.slice(0,6)+"..."+a.slice(-4);}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function animCount(id,from,to,dur){const el=document.getElementById(id);if(!el)return;const s=performance.now();function t(n){const p=Math.min((n-s)/dur,1);el.textContent=Math.round(from+(to-from)*p);if(p<1)requestAnimationFrame(t);}requestAnimationFrame(t);}
+
+window.addEventListener("load",async()=>{
+  if(window.ethereum){const a=await window.ethereum.request({method:"eth_accounts"});if(a.length>0){wallet=a[0];setWUI(wallet);loadHistory();}}
+});
+</script>
+</body>
+</html>
